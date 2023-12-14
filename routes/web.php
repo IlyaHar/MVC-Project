@@ -1,5 +1,7 @@
 <?php
+
 use core\Router;
+
 Router::add(
     'users/{id:\d+}/edit', [
         'controller' => \app\controllers\UsersController::class,
@@ -7,3 +9,7 @@ Router::add(
         'method' => 'GET'
     ]
 );
+
+
+
+

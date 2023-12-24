@@ -1,4 +1,8 @@
 <?php
+
+
+use app\models\User;
+
 define('BASE_DIR', dirname(__DIR__));
 
 require_once BASE_DIR . '/config/constants.php';
@@ -7,6 +11,13 @@ require_once BASE_DIR . '/vendor/autoload.php';
 try {
     $dotenv = \Dotenv\Dotenv::createUnsafeImmutable(BASE_DIR);
     $dotenv->load();
+
+
+    dd(User::update( 7, [
+        'email' => 'updatenewuser@gmail.com',
+        'password' => 'newuser1234update'
+    ]));
+
 
     if (!preg_match('/assets/i', $_SERVER['REQUEST_URI'])) {
         \core\Router::dispatch($_SERVER['REQUEST_URI']);

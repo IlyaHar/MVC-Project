@@ -2,10 +2,19 @@
     "name": "root/html",
     "autoload": {
         "psr-4": {
-            "Root\\Html\\": "src/"
-        }
+            "app\\": "app/",
+            "config\\": "config/",
+            "core\\": "core/"
+        },
+        "files": [
+            "routes/api.php",
+            "core/helpers.php"
+        ]
     },
     "require": {
-        "larapack/dd": "^1.1"
+        "larapack/dd": "^1.1",
+        "ext-pdo": "*",
+        "vlucas/phpdotenv": "^5.6",
+        "rbdwllr/reallysimplejwt": "^5.0"
     }
 }

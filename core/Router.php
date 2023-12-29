@@ -19,8 +19,9 @@ class Router
 
         static::$routes[$route] = $params;
     }
-    static public function dispatch(string $uri): void
+    static public function dispatch(string $uri): string
     {
+        $data = [];
         $uri = static::removeQueryVariables($uri);
         $uri = trim($uri, '/');
 
@@ -28,14 +29,18 @@ class Router
             static::checkRequestMethod();
 
             $controller = static::getController();
-            $action  = static::getAction($controller);
+            $action = static::getAction($controller);
 
             if ($controller->before($action, static::$params)) {
-                call_user_func_array([$controller, $action], static::$params);
+                $response = call_user_func_array([$controller, $action], static::$params);
                 $controller->after($action);
             }
-
         }
+
+        return json_response($response['code'], [
+            'data' => $response['body'],
+            'errors' => $response['errors']
+        ]);
     }
 
     static protected function getAction(Controller $controller): string

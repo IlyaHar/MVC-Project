@@ -13,15 +13,9 @@ try {
     $dotenv->load();
 
 
-    dd(User::update( 7, [
-        'email' => 'updatenewuser@gmail.com',
-        'password' => 'newuser1234update'
-    ]));
 
+    die(\core\Router::dispatch($_SERVER['REQUEST_URI']));
 
-    if (!preg_match('/assets/i', $_SERVER['REQUEST_URI'])) {
-        \core\Router::dispatch($_SERVER['REQUEST_URI']);
-    }
 } catch (PDOException $exception) {
     dd('PDOException', $exception);
 } catch (Exception $exception) {

@@ -1,7 +1,9 @@
 <?php
 
+
 use core\Config;
 use core\Db;
+use ReallySimpleJWT\Token;
 
 
 function requestBody(): array
@@ -14,6 +16,17 @@ function requestBody(): array
     }
 
     return $data;
+}
+
+function error_response(Exception $exception): void
+{
+    die(json_response(422, [
+        'data' => [
+            'message' => $exception->getMessage()
+        ],
+        'errors' => $exception->getTrace()
+    ]));
+
 }
 
 function json_response($code = 200, array $data = []): string
@@ -31,7 +44,8 @@ function json_response($code = 200, array $data = []): string
         200 => '200 OK',
         400 => '400 Bad Request',
         422 => 'Unprocessable Entity',
-        500 => '500 Internal Server Error'
+        500 => '500 Internal Server Error',
+        403 => 'Forbidden'
     );
 
     // ok, validation error, or failure
@@ -53,4 +67,27 @@ function config(string $name): string | null
 function db(): PDO
 {
     return Db::connect();
+}
+
+function getToken(): string
+{
+    $headers = apache_request_headers();
+
+    if (empty($headers['Authorization'])) {
+        throw new \Exception('The request should contain an auth token', 422);
+    }
+
+    return str_replace('Bearer ', '', $headers['Authorization']);
+}
+
+function authId(): int
+{
+    $tokenData = Token::getPayload(getToken());
+
+    if (empty($tokenData['user_id'])) {
+        throw new \Exception('Token structure is invalid', 422);
+    }
+
+    return $tokenData['user_id'];
+
 }
